@@ -15,11 +15,11 @@ def purpose_setter(purpose, oper):
 # Function to analyze text
 def analyse(request):
     # Getting the text and the operations that the user may want to perform
-    user_txt = request.GET.get('text', 'default')
-    removepunc = request.GET.get('removepunc', 'off')
-    fullcapitalise = request.GET.get('fullcaps', 'off')
-    titlecase = request.GET.get('titlecase', 'off')
-    new_line_remover = request.GET.get('new_line_remover', 'off')
+    user_txt = request.POST.get('text', 'default')
+    removepunc = request.POST.get('removepunc', 'off')
+    fullcapitalise = request.POST.get('fullcaps', 'off')
+    titlecase = request.POST.get('titlecase', 'off')
+    new_line_remover = request.POST.get('new_line_remover', 'off')
 
     # Setting up the variables
     analyzed_txt = ""
@@ -33,6 +33,7 @@ def analyse(request):
         for char in user_txt:
             if char not in punctuations:
                 analyzed_txt = analyzed_txt + char
+        user_txt = analyzed_txt
 
     # Checking if the title case operation is requested
     if titlecase == "on":
@@ -43,6 +44,7 @@ def analyse(request):
         else:
             # Converting the user's text to title case
             analyzed_txt = user_txt.title()
+        user_txt = analyzed_txt
 
     # Checking if the full capitalization operation is requested
     if fullcapitalise == "on":
@@ -54,14 +56,16 @@ def analyse(request):
             # Converting each character in the user's text to uppercase
             for char in user_txt:
                 analyzed_txt += char.upper()
+        user_txt = analyzed_txt
 
     # Checking if the new line remover operation is requested
-    elif new_line_remover == "on":
+    if new_line_remover == "on":
         purpose_setter(purpose, 'New-Line-Remover')
         # Removing new line characters from the user's text
         for char in user_txt:
             if char != '\n':
                 analyzed_txt += char
+        user_txt = analyzed_txt
 
 
     main_purpose = ""
